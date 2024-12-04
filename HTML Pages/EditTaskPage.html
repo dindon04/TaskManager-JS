@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Task</title>
   <link rel="stylesheet" href="styles.css">
+  <script type="module" defer src="../js/editTask.js"></script>
 </head>
 <body>
   <div class="container">
@@ -12,11 +13,11 @@
 
     <form id="edit-task-form">
       <div>
-        <label for="edit-title">Task Title:</label>
+        <label for="edit-title">Name</label>
         <input type="text" id="edit-title" name="title" required>
       </div>
       <div>
-        <label for="edit-description">Task Description:</label>
+        <label for="edit-description">Description</label>
         <textarea id="edit-description" name="description" required></textarea>
       </div>
       <button type="submit">Save Changes</button>

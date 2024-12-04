@@ -1,26 +1,25 @@
 import {TaskList} from "./taskList.js";
 import {Task} from "./task.js";
 
-const taskManager = new TaskList();
-const taskContainer = document.getElementById('task-list');
+const taskList = new TaskList();
+const taskListContainer = document.getElementById('task-list');
 const addTaskForm = document.getElementById('add-task-form');
-const filterDropdown = document.getElementById('filter');
-const sortDropdown = document.getElementById('sort');
+const filterSelect = document.getElementById('filter');
+const sortSelect = document.getElementById('sort');
 
-function renderTasks() {
-  const filterCriteria = filterDropdown.value;
-  const sortCriteria = sortDropdown.value;
-
-  const tasks = taskManager
-      .sort(sortCriteria)
+function displayTasks() {
+  const filter = filterSelect.value;
+  const sort = sortSelect.value;
+  const tasks = taskList
+      .sortTasks(sort)
       .filter(
           task =>
-              filterCriteria === 'all' ||
-              (filterCriteria === 'done' && task.isCompleted) ||
-              (filterCriteria === 'remaining' && !task.isCompleted)
+              filter === 'all' ||
+              (filter === 'done' && task.isCompleted) ||
+              (filter === 'remaining' && !task.isCompleted)
       );
 
-  taskContainer.innerHTML = '';
+  taskListContainer.innerHTML = '';
 
   tasks.forEach(task => {
     const taskElement = document.createElement('div');
@@ -39,9 +38,8 @@ function renderTasks() {
       </div>
     `;
 
-    taskContainer.appendChild(taskElement);
+    taskListContainer.appendChild(taskElement);
   });
-
   document.querySelectorAll('.task-title').forEach(titleElement => {
     titleElement.addEventListener('click', e => {
       const taskId = e.target.dataset.id;
@@ -52,7 +50,7 @@ function renderTasks() {
 
 document.addEventListener('DOMContentLoaded', () => {
   if (!addTaskForm) {
-    console.error('Add Task Form not found in DOM');
+    console.error('add-task-form not found');
     return;
   }
   addTaskForm.addEventListener('submit', e => {
@@ -65,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const descriptionRegex = /^.+$/;
 
     if (!titleRegex.test(title) || !descriptionRegex.test(description) || title === description) {
-      alert('Invalid input. Please check the fields.');
+      alert('invalid input');
       return;
     }
 
@@ -76,40 +74,41 @@ document.addEventListener('DOMContentLoaded', () => {
         new Date().toISOString()
     );
 
-    taskManager.add(newTask);
+    taskList.addTask(newTask);
     addTaskForm.reset();
-    renderTasks();
+    displayTasks();
   });
 });
 
-taskContainer.addEventListener('click', e => {
+taskListContainer.addEventListener('click', e => {
   if (e.target.classList.contains('delete-btn')) {
     const id = e.target.dataset.id;
-    taskManager.remove(id);
-    renderTasks();
+    taskList.deleteTask(id);
+    displayTasks();
   }
 });
 
-taskContainer.addEventListener('click', e => {
+taskListContainer.addEventListener('click', e => {
   if (e.target.classList.contains('edit-btn')) {
     const id = e.target.dataset.id;
     window.location.href = `EditTaskPage.html?id=${id}`;
   }
 });
 
-taskContainer.addEventListener('change', e => {
+taskListContainer.addEventListener('change', e => {
   if (e.target.type === 'checkbox') {
     const id = e.target.dataset.id;
-    const task = taskManager.findById(id);
+    const task = taskList.getTaskById(id);
     if (task) {
       task.isCompleted = e.target.checked;
-      taskManager.update(task);
-      renderTasks();
+      taskList.updateTask(task);
+      displayTasks();
     }
   }
 });
 
-filterDropdown.addEventListener('change', renderTasks);
-sortDropdown.addEventListener('change', renderTasks);
+filterSelect.addEventListener('change', displayTasks);
+sortSelect.addEventListener('change', displayTasks);
 
-renderTasks();
+
+displayTasks();

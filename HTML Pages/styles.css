@@ -97,7 +97,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px;
-    border-radius: 8px;
+    border-radius: 15px;
     background: #f9f9f9;
     margin-bottom: 15px;
     border: 1px solid #ddd;
@@ -107,10 +107,6 @@ body {
   .task-item.done {
     background: #d4edda;
     border-color: #c3e6cb;
-  }
-  
-  .task-item:hover {
-    background-color: #f1f1f1;
   }
   
   .task-item .task-title {
@@ -128,10 +124,8 @@ body {
   .task-item button {
     background-color: #dc3545;
     color: white;
-    border-radius: 6px;
     padding: 8px 15px;
     cursor: pointer;
-    font-size: 1rem;
     transition: background-color 0.3s ease;
   }
   
