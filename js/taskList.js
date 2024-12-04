@@ -1,57 +1,61 @@
 import {Task} from "./task.js";
 
 export class TaskList {
-    #tasks;
+    #taskCollection;
 
     constructor() {
-        this.#tasks = JSON.parse(localStorage.getItem('tasks'))?.map(
-            task => new Task(task.id, task.title, task.description, task.createdAt, task.isCompleted)
+        this.#taskCollection = JSON.parse(localStorage.getItem('tasks'))?.map(
+            taskData => new Task(
+                taskData.id, 
+                taskData.title, 
+                taskData.description, 
+                taskData.createdAt, 
+                taskData.isCompleted
+            )
         ) || [];
     }
 
-    addTask(task) {
-        this.#tasks.push(task);
-        alert('task added');
-        this.saveTasks();
+    add(task) {
+        this.#taskCollection.push(task);
+        alert('Task added');
+        this.saveToStorage();
     }
 
-    deleteTask(id) {
-        this.#tasks = this.#tasks.filter(task => task.id !== id);
-        alert('task deleted');
-        this.saveTasks();
+    remove(taskId) {
+        this.#taskCollection = this.#taskCollection.filter(task => task.id !== taskId);
+        alert('Task removed');
+        this.saveToStorage();
     }
 
-    updateTask(updatedTask) {
-        const index = this.#tasks.findIndex(task => task.id === updatedTask.id);
-        if (index !== -1) 
-        {
-            this.#tasks[index] = updatedTask;
-            this.saveTasks();
+    update(taskToUpdate) {
+        const taskIndex = this.#taskCollection.findIndex(task => task.id === taskToUpdate.id);
+        if (taskIndex !== -1) {
+            this.#taskCollection[taskIndex] = taskToUpdate;
+            this.saveToStorage();
         }
     }
 
-    getTaskById(id) {
-        return this.#tasks.find(task => task.id === id);
+    findById(taskId) {
+        return this.#taskCollection.find(task => task.id === taskId);
     }
 
-    sortTasks(criteria) {
-        return [...this.#tasks].sort((a, b) => {
+    sort(criteria) {
+        return [...this.#taskCollection].sort((taskA, taskB) => {
             if (criteria === 'name') {
-                return a.title.localeCompare(b.title);
+                return taskA.title.localeCompare(taskB.title);
             } else if (criteria === 'date') {
-                return new Date(b.createdAt) - new Date(a.createdAt);
+                return new Date(taskB.createdAt) - new Date(taskA.createdAt);
             }
         });
     }
 
-    saveTasks() {
-        const serializedTasks = this.#tasks.map(task => ({
+    saveToStorage() {
+        const serializedTasks = this.#taskCollection.map(task => ({
             id: task.id,
             title: task.title,
             description: task.description,
             createdAt: task.createdAt,
             isCompleted: task.isCompleted,
-
         }));
         localStorage.setItem('tasks', JSON.stringify(serializedTasks));
     }
