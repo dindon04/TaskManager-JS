@@ -29,4 +29,30 @@ export class TaskList {
             this.saveTasks();
         }
     }
+
+    getTaskById(id) {
+        return this.#tasks.find(task => task.id === id);
+    }
+
+    sortTasks(criteria) {
+        return [...this.#tasks].sort((a, b) => {
+            if (criteria === 'name') {
+                return a.title.localeCompare(b.title);
+            } else if (criteria === 'date') {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            }
+        });
+    }
+
+    saveTasks() {
+        const serializedTasks = this.#tasks.map(task => ({
+            id: task.id,
+            title: task.title,
+            description: task.description,
+            createdAt: task.createdAt,
+            isCompleted: task.isCompleted,
+
+        }));
+        localStorage.setItem('tasks', JSON.stringify(serializedTasks));
+    }
 }
