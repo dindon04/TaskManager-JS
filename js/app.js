@@ -48,6 +48,17 @@ function displayTasks() {
     });
 }
 
+const validPages = ['CreateTaskPage.html', 'MainPage.html', 'ViewTaskPage.html', 'ViewTaskDetails.html', 'EditTaskPage.html', 'error404.html'];
+
+function handleNavigation() {
+    const page = window.location.pathname.split('/').pop();
+    console.log("Current page:", page);
+    if (!validPages.includes(page)) {
+        console.log("Page not found, redirecting to 404...");
+        window.location.href = 'error404.html';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     if (!addTaskForm) {
         console.error('add-task-form not found');
